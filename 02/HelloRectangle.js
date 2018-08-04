@@ -1,11 +1,10 @@
-// MultiPoint.js
+// HelloRectangle.js
 
 //顶点着色器
 let VSHADER_SOURCE = 
     'attribute vec4 a_Position;\n' + 
     'void main() {\n' + 
     '   gl_Position = a_Position;\n' + 
-    '   gl_PointSize = 10.0;\n' + 
     '}\n'
 //片段着色器
 let FSHADER_SOURCE = 
@@ -43,14 +42,15 @@ let main = function () {
     //设置背景色并清空<canvas>
     gl.clearColor(0.0, 0.0, 0.0, 1.0)
     gl.clear(gl.COLOR_BUFFER_BIT)
-    gl.drawArrays(gl.POINTS, 0, nPos)
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, nPos)
 }
 
 function initVertexBuffers(gl) {
     let vertices = new Float32Array([
-        0.0, 0.5, -0.5, -0.5, 0.5, -0.5
+        -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5
     ])
-    let n = 3
+    //0.5, 0.5, 0.5, -0.5, -0.5, -0.5
+    let n = 4
     
     //创建缓冲区对象
     let vertexBuffer = gl.createBuffer()

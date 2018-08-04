@@ -1,11 +1,11 @@
-// MultiPoint.js
+// TranslateTriangle.js
 
 //顶点着色器
 let VSHADER_SOURCE = 
     'attribute vec4 a_Position;\n' + 
+    'uniform vec4 u_Translation;\n' +
     'void main() {\n' + 
-    '   gl_Position = a_Position;\n' + 
-    '   gl_PointSize = 10.0;\n' + 
+    '   gl_Position = a_Position + u_Translation;\n' + 
     '}\n'
 //片段着色器
 let FSHADER_SOURCE = 
@@ -14,6 +14,7 @@ let FSHADER_SOURCE =
     '}\n'
 
 let main = function () {
+    let Tx = 0.5, Ty = 0.5, Tz = 0.0
     //根据id获取<canvas>标签
     let canvas = document.getElementById('myCanvas')
     if (!canvas) {
@@ -39,11 +40,13 @@ let main = function () {
         console.log('设置顶点位置失败')
         return
     }
+    let u_Translation = gl.getUniformLocation(gl.program, 'u_Translation')
+    gl.uniform4f(u_Translation, Tx, Ty, Tz, 0.0)
 
     //设置背景色并清空<canvas>
     gl.clearColor(0.0, 0.0, 0.0, 1.0)
     gl.clear(gl.COLOR_BUFFER_BIT)
-    gl.drawArrays(gl.POINTS, 0, nPos)
+    gl.drawArrays(gl.TRIANGLES, 0, nPos)
 }
 
 function initVertexBuffers(gl) {
