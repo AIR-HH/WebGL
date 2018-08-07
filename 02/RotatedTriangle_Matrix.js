@@ -1,14 +1,11 @@
-// RotatedTriangle.js
+// RotatedTriangle_Matrix.js
 
 //顶点着色器
 let VSHADER_SOURCE = 
     'attribute vec4 a_Position;\n' + 
-    'uniform float u_SinB, u_CosB;\n' +
+    'uniform mat4 u_xformMatrix;\n' +
     'void main() {\n' + 
-    '   gl_Position.x = a_Position.x * u_CosB - a_Position.y * u_SinB;\n' + 
-    '   gl_Position.y = a_Position.x * u_SinB + a_Position.y * u_CosB;\n' +
-    '   gl_Position.z = a_Position.z;\n' +
-    '   gl_Position.w = 1.0;\n' +
+    '   gl_Position = u_xformMatrix * a_Position;\n' + 
     '}\n'
 //片段着色器
 let FSHADER_SOURCE = 
@@ -42,14 +39,6 @@ let main = function () {
         console.log('设置顶点位置失败')
         return
     }
-    let angle = 90.0
-    let radian = Math.PI * angle / 180.0
-    let sinB = Math.sin(radian);
-    let cosB = Math.cos(radian);
-    let u_SinB = gl.getUniformLocation(gl.program, 'u_SinB')
-    gl.uniform1f(u_SinB, sinB)
-    let u_CosB = gl.getUniformLocation(gl.program, 'u_CosB')
-    gl.uniform1f(u_CosB, cosB)
 
     //设置背景色并清空<canvas>
     gl.clearColor(0.0, 0.0, 0.0, 1.0)
@@ -63,11 +52,15 @@ function Rotated(gl, angle, nPos) {
     let radian = Math.PI * angle / 180.0
     let sinB = Math.sin(radian);
     let cosB = Math.cos(radian);
-    let u_SinB = gl.getUniformLocation(gl.program, 'u_SinB')
-    gl.uniform1f(u_SinB, sinB)
-    let u_CosB = gl.getUniformLocation(gl.program, 'u_CosB')
-    gl.uniform1f(u_CosB, cosB)
-
+    let xformMatrix = new Float32Array([
+        cosB, -sinB, 0.0, 0.0,
+        sinB, cosB,  0.0, 0.0,
+        0.0,  0.0,   1.0, 0.0,
+        0.0,  0.0,   0.0, 1.0
+    ])
+    console.log(xformMatrix, cosB)
+    let u_xformMatrix = gl.getUniformLocation(gl.program, 'u_xformMatrix')
+    gl.uniformMatrix4fv(u_xformMatrix, false, xformMatrix)
     //设置背景色并清空<canvas>
     gl.clearColor(0.0, 0.0, 0.0, 1.0)
     gl.clear(gl.COLOR_BUFFER_BIT)
